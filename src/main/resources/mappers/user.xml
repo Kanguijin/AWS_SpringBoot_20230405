@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.study.repository.UserRepository">
+
+<resultMap type="com.web.study.domain.entity.Role" id="role">
+	<result column="role_id" property="role_id"/>
+	<result column="role_name" property="role_name"/>
+</resultMap>
+
+<resultMap type="com.web.study.domain.entity.Authority" id="authority">
+	<result column="authority_id" property="authority_id"/>
+	<result column="user_id" property="user_id"/>
+	<result column="role_id" property="role_id"/>
+	<collection property="role" resultMap="role"/>
+</resultMap>
+
+<resultMap type="com.web.study.domain.entity.User" id="user">
+	<result column="user_id" property="user_id"/>
+	<result column="username" property="username"/>
+	<result column="password" property="password"/>
+	<result column="name" property="name"/>
+	<result column="email" property="email"/>
+	<collection property="authorities" javaType="list" resultMap="authority"></collection>
+</resultMap>
+
+ 	<insert 
+ 	id="saveUser" 
+ 	parameterType="com.web.study.domain.entity.User"
+ 	useGeneratedKeys="true"
+ 	keyProperty="user_id">
+ 		insert into user_mst
+ 		values(0, #{username}, #{password}, #{name}, #{email})
+ 	</insert>
+   
+   <insert id="addAuthorities" parameterType="list">
+   		insert into authority_mst
+   		values
+   		<foreach collection="list" item="authority" separator=",">
+   			(0, #{authority.user_id}, #{authority.role_id})   		
+   		</foreach>
+   </insert>
+   
+   <select id="findByUsername" resultMap="user">
+  	select 
+	  	um.user_id,
+	  	um.username,
+	  	um.password,
+	  	um.name,
+	  	um.email,
+	  	
+	  	am.authority_id,
+	  	am.role_id,
+	  	     
+	  	rm.role_name
+  	from
+	  	user_mst um
+	  	left outer join authority_mst am on(am.user_id = um.user_id)
+	  	left outer join role_mst rm on(rm.role_id = am.role_id)
+  	where
+  		um.username = #{username}
+   
+   </select>
+   
+</mapper> 

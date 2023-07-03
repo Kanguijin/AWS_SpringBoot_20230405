@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.study.repository.LectureRepository">
+
+	<resultMap type="com.web.study.domain.entity.Lecture" id="lecture">
+		<result column="ltm_id" property="ltm_id"/>	
+		<result column="ltm_name" property="ltm_name"/>	
+		<result column="ltm_price" property="ltm_price"/>	
+		<result column="itm_id" property="itm_id"/>	
+		<collection property="instructor" resultMap="instructor"></collection>
+	</resultMap>
+	
+	<resultMap type="com.web.study.domain.entity.Instructor" id="instructor">
+		<result column="itm_id" property="itm_id"/>	
+		<result column="itm_name" property="itm_name"/>	
+		<result column="itm_birth" property="itm_birth"/>	
+	</resultMap>
+	
+	<insert id="register" parameterType="com.web.study.domain.entity.Lecture">
+		insert into lecture_mst
+		values (0, #{lecture_name}, #{lecture_price}, #{instructor_id})
+	</insert>
+	
+	<select id="searchLecture" parameterType="hashMap" resultMap="lecture">
+	select 
+		lm.ltm_id,
+		lm.ltm_name,
+		lm.ltm_price,
+		lm.itm_id,
+		
+		im.itm_id,
+		im.itm_name,
+		im.itm_birth
+	from
+		lecture_mst lm
+		left outer join instructor_mst im on(im.itm_id = lm.itm_id)
+	where
+		1 = 1
+	<if test="type == 1">
+		and lm.ltm_name like concat('%', #{searchValue}, '%')
+	</if>
+	<if test="type == 2">
+		and im.itm_name like concat('%', #{searchValue}, '%')
+	</if>
+	</select>
+	
+	
+</mapper>

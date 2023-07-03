@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.study.repository.InstructorRepository">
+  
+   <insert id="register" parameterType="Instructor">
+      insert into instructor_mst
+      values (0, #{name}, #{birth_date})
+   </insert>
+  
+  <select id="getInstructorAll" resultType="Instructor">
+  	select
+  		itm_id,
+  		itm_name,
+  		itm_birth
+  	from
+  		instructor_mst
+  </select>
+  
+  <select id="findInstructorById" parameterType="Integer" resultType="Instructor">
+	  select
+	  		itm_id,
+	  		itm_name,
+	  		itm_birth 
+	  	from
+	  		instructor_mst
+	  	where
+	  		itm_id = #{itm_id}
+  </select>
+</mapper> 

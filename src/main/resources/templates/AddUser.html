@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	</head>
+	<body>
+		<div>
+			<input class="username">
+		</div>
+		<div>
+			<input class="password">
+		</div>
+		<div>
+			<input class="name">
+		</div>
+		<div>
+			<input class="email">
+		</div>
+		<button type="button" class="send-button">등록</button>
+		
+		<script>
+		
+			window.onload = () => {
+				addSendButtonEvent();
+			}
+			
+			function addSendButtonEvent() {
+				const sendButton = document.querySelector(".send-button");
+				sendButton.onclick = () => {
+					send();
+				}
+			}
+		
+			function send() {
+				
+				const username = document.querySelector(".username").value;
+				const password = document.querySelector(".password").value;
+				const name = document.querySelector(".name").value;
+				const email = document.querySelector(".email").value;
+				
+				const userObj = {
+						username,
+						password,
+						name,
+						email
+				}
+				
+				const request = {
+						type:"post", // method
+						url:"http://localhost:8080/api/user/addition",
+						contentType:"application/json", // 요청 데이터 타입
+						data:JSON.stringify(userObj), // 요청 데이터
+						dataType:"json", // 응답 데이터 타입
+						// 응답 성공시에 실행 될 메소드 정의 
+						success: (response) => {
+							console.log(response);
+						},
+						// 요청 또는 응답 실패시에 실행될 메소드 정의 
+						error: (error) => {
+							console.log(error);
+						}
+				}
+				
+				$.ajax(request);
+				
+			}
+		</script>
+	</body>
+</html>

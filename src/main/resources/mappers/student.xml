@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.web.study.repository.StudentRepository">
+  
+   <insert id="saveStudent" parameterType="Student">
+      insert into student_mst
+      values (0, #{sdm_name}, #{sdm_birth})
+   </insert>
+   
+   <select id="getStudentAll" resultType="Student">
+		select
+  			sdm_id,
+  			sdm_name,
+  			sdm_birth
+  	from
+  			student_mst
+   </select>
+   
+   <select id="findStudentById" parameterType="Integer" resultType="Student">
+   	select
+  		sdm_id,
+  		sdm_name,
+  		sdm_birth
+  	from
+  		student_mst
+  	where 
+  		sdm_id = #{sdm_id}
+   </select>
+  
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.web.study.repository.CourseRepository">
+
+	<resultMap type="com.web.study.domain.entity.Lecture" id="lecture">
+		<result column="ltm_id" property="ltm_id"/>	
+		<result column="ltm_name" property="ltm_name"/>	
+		<result column="ltm_price" property="ltm_price"/>	
+		<result column="itm_id" property="itm_id"/>	
+		<collection property="instructor" resultMap="instructor"></collection>
+	</resultMap>
+	
+	<resultMap type="com.web.study.domain.entity.Instructor" id="instructor">
+		<result column="itm_id" property="itm_id"/>	
+		<result column="itm_name" property="itm_name"/>	
+		<result column="itm_birth" property="itm_birth"/>	
+	</resultMap>
+	
+	<resultMap type="com.web.study.domain.entity.Student" id="student">
+		<result column="itm_id" property="sdm_id"/>
+		<result column="sdm_name" property="sdm_name"/>
+		<result column="sdm_birth" property="sdm_birth"/>
+	</resultMap>
+	
+  	<resultMap type="com.web.study.domain.entity.Course" id="course">
+  		<result column="csm_id" property="csm_id"/>
+		<result column="ltm_id" property="ltm_id"/>
+		<result column="sdm_id" property="sdm_id"/>
+		<result column="registe_date" property="registe_date"/>
+		<collection property="lecture" resultMap="lecture"></collection>
+		<collection property="student" resultMap="student"></collection>
+  	</resultMap>
+  	
+   <insert id="register" parameterType="Course">
+      insert into course_mst
+      values (0, #{ltm_id}, #{sdm_id}, #{registe_date})
+   </insert>
+   
+  
+  <select id="getCourseAll" resultMap="course">
+  	select
+  		cm.csm_id,
+  		cm.ltm_id,
+  		cm.sdm_id,
+  		cm.registe_date,
+  		lm.ltm_id,
+  		lm.ltm_name,
+  		lm.ltm_price,
+  		lm.itm_id,
+  		im.itm_id,
+  		im.itm_name,
+  		im.itm_birth,
+  		sm.sdm_id,
+  		sm.sdm_name,
+  		sm.sdm_birth
+  	from
+  		course_mst cm
+  		left outer join lecture_mst lm on(lm.ltm_id= cm.ltm_id)
+  		left outer join instructor_mst im on(im.itm_id = lm.itm_id)
+  		left outer join student_mst sm on(sm.sdm_id= cm.sdm_id)
+  </select>
+  
+  <select id="searchCourse" parameterType="hashmap" resultMap="course">
+  	select
+  		cm.csm_id,
+  		cm.ltm_id,
+  		cm.sdm_id,
+  		cm.registe_date,
+  		lm.ltm_id,
+  		lm.ltm_name,
+  		lm.ltm_price,
+  		lm.itm_id,
+  		im.itm_id,
+  		im.itm_name,
+  		im.itm_birth,
+  		sm.sdm_id,
+  		sm.sdm_name,
+  		sm.sdm_birth
+  	from
+  		course_mst cm
+  		left outer join lecture_mst lm on(lm.ltm_id= cm.ltm_id)
+  		left outer join instructor_mst im on(im.itm_id = lm.itm_id)
+  		left outer join student_mst sm on(sm.sdm_id= cm.sdm_id)
+  	where 
+  		1 = 1
+  	<if test="type == 1">
+  	and lm.ltm_name like concat('%', #{searchValue}, '%')  	
+  	</if>
+  	<if test="type == 2">
+	and im.itm_name like concat('%', #{searchValue}, '%')
+	</if>
+  	<if test="type == 3">
+  	and sm.sdm_name like concat('%', #{searchValue}, '%')	
+  	</if>
+  	
+  	
+  	
+  </select>
+</mapper>

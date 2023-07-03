@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+		<script src="https://code.jquery.com/jquery-latest.min.js"></script>
+	</head>
+	<body>
+		<input placeholder="조회 할 id 입력" class="user-id">
+		<button type="button" class="search-button">조회</button>
+		
+		<div class="result-container">
+		
+		</div>
+		
+		<script type="text/javascript">
+			window.onload = () => {
+				addSearchButtonEvent();
+			}
+			
+			function addSearchButtonEvent() {
+				const searchButton = document.querySelector(".search-button");
+				searchButton.onclick = () => {
+					search();
+				}
+			}	
+				
+			function search() {
+				const userId = document.querySelector(".user-id").value;
+				
+				const request = {
+						type: "get",
+						url: "http://localhost:8080/api/user/" + userId, 
+						dataType: "json",
+						success: response => {
+							const resultContainer = document.querySelector(".result-container");
+							resultContainer.innerHTML =`
+							<div>username: ${response.data.username}</div>
+							<div>password: ${response.data.password}</div>
+							<div>name: ${response.data.name}</div>
+							<div>email: ${response.data.email}</div>
+							`;
+						},
+						error: error => {
+							alert(error.responseJSON.message);
+							
+						}
+					}
+				$.ajax(request);
+				}
+			
+		</script>
+	</body>
+</html>
